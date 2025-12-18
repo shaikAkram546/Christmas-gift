@@ -1,0 +1,294 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@import url('https://fonts.googleapis.com/css2?family=Great+Vibes&family=Playfair+Display:wght@400;500;600;700&family=Poppins:wght@300;400;500;600&display=swap');
+
+@layer base {
+  :root {
+    /* Christmas Color Palette */
+    --background: 220 30% 8%;
+    --foreground: 40 100% 97%;
+
+    --card: 220 25% 12%;
+    --card-foreground: 40 100% 97%;
+
+    --popover: 220 25% 10%;
+    --popover-foreground: 40 100% 97%;
+
+    --primary: 0 72% 51%;
+    --primary-foreground: 40 100% 97%;
+
+    --secondary: 43 100% 50%;
+    --secondary-foreground: 220 30% 8%;
+
+    --muted: 220 20% 18%;
+    --muted-foreground: 220 10% 60%;
+
+    --accent: 150 60% 35%;
+    --accent-foreground: 40 100% 97%;
+
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 210 40% 98%;
+
+    --border: 220 20% 20%;
+    --input: 220 20% 20%;
+    --ring: 43 100% 50%;
+
+    --radius: 1rem;
+
+    /* Custom Christmas tokens */
+    --christmas-red: 0 72% 51%;
+    --christmas-gold: 43 100% 50%;
+    --christmas-green: 150 60% 35%;
+    --christmas-white: 40 100% 97%;
+    --christmas-night: 220 30% 8%;
+    --christmas-snow: 210 100% 98%;
+    --christmas-glow: 43 100% 70%;
+    
+    /* Glassmorphism */
+    --glass-bg: 220 25% 15%;
+    --glass-border: 220 20% 25%;
+
+    /* Gradients */
+    --gradient-night: linear-gradient(180deg, hsl(220 35% 6%) 0%, hsl(220 30% 12%) 50%, hsl(230 25% 8%) 100%);
+    --gradient-gold: linear-gradient(135deg, hsl(43 100% 50%) 0%, hsl(35 100% 60%) 50%, hsl(43 100% 50%) 100%);
+    --gradient-glow: radial-gradient(circle, hsl(43 100% 70% / 0.3) 0%, transparent 70%);
+  }
+
+  .dark {
+    --background: 220 30% 8%;
+    --foreground: 40 100% 97%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground;
+    font-family: 'Poppins', sans-serif;
+    overflow-x: hidden;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    font-family: 'Playfair Display', serif;
+  }
+
+  .font-script {
+    font-family: 'Great Vibes', cursive;
+  }
+
+  .font-display {
+    font-family: 'Playfair Display', serif;
+  }
+
+  .font-body {
+    font-family: 'Poppins', sans-serif;
+  }
+}
+
+@layer components {
+  .glass {
+    @apply bg-[hsl(var(--glass-bg)/0.6)] backdrop-blur-xl border border-[hsl(var(--glass-border)/0.3)];
+  }
+
+  .glass-strong {
+    @apply bg-[hsl(var(--glass-bg)/0.8)] backdrop-blur-2xl border border-[hsl(var(--glass-border)/0.5)];
+  }
+
+  .text-gradient-gold {
+    @apply bg-clip-text text-transparent;
+    background-image: linear-gradient(135deg, hsl(43 100% 50%) 0%, hsl(35 100% 70%) 50%, hsl(43 100% 50%) 100%);
+  }
+
+  .glow-gold {
+    box-shadow: 0 0 30px hsl(43 100% 50% / 0.3), 0 0 60px hsl(43 100% 50% / 0.2);
+  }
+
+  .glow-red {
+    box-shadow: 0 0 30px hsl(0 72% 51% / 0.3), 0 0 60px hsl(0 72% 51% / 0.2);
+  }
+
+  .text-shadow-glow {
+    text-shadow: 0 0 20px hsl(43 100% 50% / 0.5), 0 0 40px hsl(43 100% 50% / 0.3);
+  }
+}
+
+@layer utilities {
+  .snowflake {
+    position: fixed;
+    color: hsl(var(--christmas-snow));
+    pointer-events: none;
+    opacity: 0.8;
+    animation: snowfall linear infinite;
+    z-index: 1;
+  }
+
+  @keyframes snowfall {
+    0% {
+      transform: translateY(-10vh) rotate(0deg);
+      opacity: 0;
+    }
+    10% {
+      opacity: 0.8;
+    }
+    90% {
+      opacity: 0.8;
+    }
+    100% {
+      transform: translateY(110vh) rotate(360deg);
+      opacity: 0;
+    }
+  }
+
+  @keyframes float {
+    0%, 100% {
+      transform: translateY(0) rotate(0deg);
+    }
+    50% {
+      transform: translateY(-20px) rotate(5deg);
+    }
+  }
+
+  @keyframes pulse-glow {
+    0%, 100% {
+      opacity: 0.5;
+      transform: scale(1);
+    }
+    50% {
+      opacity: 1;
+      transform: scale(1.05);
+    }
+  }
+
+  @keyframes twinkle {
+    0%, 100% {
+      opacity: 0.3;
+      transform: scale(0.8);
+    }
+    50% {
+      opacity: 1;
+      transform: scale(1.2);
+    }
+  }
+
+  @keyframes sparkle {
+    0%, 100% {
+      opacity: 0;
+      transform: scale(0) rotate(0deg);
+    }
+    50% {
+      opacity: 1;
+      transform: scale(1) rotate(180deg);
+    }
+  }
+
+  @keyframes sleigh-fly {
+    0% {
+      transform: translateX(-100%) translateY(0);
+    }
+    50% {
+      transform: translateX(50vw) translateY(-30px);
+    }
+    100% {
+      transform: translateX(120vw) translateY(0);
+    }
+  }
+
+  @keyframes gift-bounce {
+    0%, 100% {
+      transform: translateY(0) scale(1);
+    }
+    50% {
+      transform: translateY(-15px) scale(1.05);
+    }
+  }
+
+  @keyframes fade-in-up {
+    0% {
+      opacity: 0;
+      transform: translateY(30px);
+    }
+    100% {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  @keyframes shake {
+    0%, 100% {
+      transform: translateX(0);
+    }
+    10%, 30%, 50%, 70%, 90% {
+      transform: translateX(-5px);
+    }
+    20%, 40%, 60%, 80% {
+      transform: translateX(5px);
+    }
+  }
+
+  @keyframes firework {
+    0% {
+      transform: scale(0);
+      opacity: 1;
+    }
+    100% {
+      transform: scale(1.5);
+      opacity: 0;
+    }
+  }
+
+  @keyframes typewriter {
+    from {
+      width: 0;
+    }
+    to {
+      width: 100%;
+    }
+  }
+
+  @keyframes blink {
+    50% {
+      border-color: transparent;
+    }
+  }
+
+  .animate-float {
+    animation: float 6s ease-in-out infinite;
+  }
+
+  .animate-pulse-glow {
+    animation: pulse-glow 3s ease-in-out infinite;
+  }
+
+  .animate-twinkle {
+    animation: twinkle 2s ease-in-out infinite;
+  }
+
+  .animate-sparkle {
+    animation: sparkle 1.5s ease-in-out infinite;
+  }
+
+  .animate-sleigh {
+    animation: sleigh-fly 12s linear infinite;
+  }
+
+  .animate-gift-bounce {
+    animation: gift-bounce 2s ease-in-out infinite;
+  }
+
+  .animate-fade-in-up {
+    animation: fade-in-up 1s ease-out forwards;
+  }
+
+  .animate-shake {
+    animation: shake 0.5s ease-in-out;
+  }
+
+  .animate-firework {
+    animation: firework 0.8s ease-out forwards;
+  }
+}
