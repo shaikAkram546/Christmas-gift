@@ -133,12 +133,12 @@ const Index = () => {
 
             <div className="mt-6 flex items-center justify-center gap-6 animate-fade-in-up">
               <img
-                src="public/santa.jpeg"
+                src="/santa.jpeg"
                 alt="Santa"
                 className="w-32 h-32 object-cover rounded-xl shadow-lg"
               />
               <img
-                src="public/deer.jpeg"
+                src="/deer.jpeg"
                 alt="Deer"
                 className="w-32 h-32 object-cover rounded-xl shadow-lg"
               />

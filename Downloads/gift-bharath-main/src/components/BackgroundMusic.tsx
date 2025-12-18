@@ -50,7 +50,7 @@ const BackgroundMusic = () => {
     <>
       <audio
         ref={audioRef}
-        src="public/jingle-bells-4445741.mp3"
+        src="/jingle-bells-444574.mp3"
         preload="auto"
       />
       <button
