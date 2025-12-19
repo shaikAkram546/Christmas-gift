@@ -4,7 +4,7 @@ import { Volume2, VolumeX } from "lucide-react";
 const STORAGE_KEY = "music-enabled";
 
 const BackgroundMusic = () => {
-  const [isPlaying, setIsPlaying] = useState(false);
+  const [isPlaying, setIsPlaying] = useState(true);
   const audioRef = useRef<HTMLAudioElement>(null);
 
   useEffect(() => {
@@ -16,7 +16,11 @@ const BackgroundMusic = () => {
       audioRef.current.loop = true;
       audioRef.current.preload = "auto";
       audioRef.current.playsInline = true as any;
+      audioRef.current.muted = false;
     }
+
+    // reflect desired default in UI immediately
+    setIsPlaying(shouldPlay);
 
     if (shouldPlay && audioRef.current) {
       audioRef.current
