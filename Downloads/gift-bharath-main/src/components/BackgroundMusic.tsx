@@ -1,48 +1,69 @@
 import { useState, useRef, useEffect } from "react";
 import { Volume2, VolumeX } from "lucide-react";
 
+const STORAGE_KEY = "music-enabled";
+
 const BackgroundMusic = () => {
-  const [isPlaying, setIsPlaying] = useState(true);
-  const [hasInteracted, setHasInteracted] = useState(false);
+  const [isPlaying, setIsPlaying] = useState(false);
   const audioRef = useRef<HTMLAudioElement>(null);
 
   useEffect(() => {
+    const saved = typeof window !== "undefined" ? localStorage.getItem(STORAGE_KEY) : null;
+    const shouldPlay = saved === null ? true : saved === "true";
+
     if (audioRef.current) {
       audioRef.current.volume = 0.8;
       audioRef.current.loop = true;
+      audioRef.current.preload = "auto";
+      audioRef.current.playsInline = true as any;
+    }
+
+    if (shouldPlay && audioRef.current) {
+      audioRef.current
+        .play()
+        .then(() => setIsPlaying(true))
+        .catch(() => setIsPlaying(false));
     }
   }, []);
 
-  // Try to play on first user interaction with the page
+  // If autoplay was blocked, try again on first user interaction
   useEffect(() => {
     const handleFirstInteraction = () => {
-      if (!hasInteracted && audioRef.current) {
-        setHasInteracted(true);
-        audioRef.current.play()
-          .then(() => setIsPlaying(false))
-          .catch(console.log);
+      const saved = localStorage.getItem(STORAGE_KEY);
+      const shouldPlay = saved === null ? true : saved === "true";
+      if (shouldPlay && audioRef.current && !isPlaying) {
+        audioRef.current
+          .play()
+          .then(() => setIsPlaying(true))
+          .catch(() => {});
       }
     };
 
-    document.addEventListener('click', handleFirstInteraction, { once: true });
-    document.addEventListener('touchstart', handleFirstInteraction, { once: true });
+    document.addEventListener("click", handleFirstInteraction, { once: true });
+    document.addEventListener("touchstart", handleFirstInteraction, { once: true });
 
     return () => {
-      document.removeEventListener('click', handleFirstInteraction);
-      document.removeEventListener('touchstart', handleFirstInteraction);
+      document.removeEventListener("click", handleFirstInteraction);
+      document.removeEventListener("touchstart", handleFirstInteraction);
     };
-  }, [hasInteracted]);
+  }, [isPlaying]);
 
   const togglePlay = () => {
-    if (audioRef.current) {
-      if (isPlaying) {
-        audioRef.current.pause();
-        setIsPlaying(false);
-      } else {
-        audioRef.current.play()
-          .then(() => setIsPlaying(true))
-          .catch(console.log);
-      }
+    if (!audioRef.current) return;
+    if (isPlaying) {
+      audioRef.current.pause();
+      setIsPlaying(false);
+      localStorage.setItem(STORAGE_KEY, "false");
+    } else {
+      audioRef.current
+        .play()
+        .then(() => {
+          setIsPlaying(true);
+          localStorage.setItem(STORAGE_KEY, "true");
+        })
+        .catch(() => {
+          setIsPlaying(false);
+        });
     }
   };
 
@@ -52,6 +73,9 @@ const BackgroundMusic = () => {
         ref={audioRef}
         src="/jingle-bells-444574.mp3"
         preload="auto"
+        // keep attributes to hint browser about autoplay intent
+        autoPlay
+        loop
       />
       <button
         onClick={togglePlay}
