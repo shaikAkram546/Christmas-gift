@@ -11,6 +11,8 @@ const BackgroundMusic = () => {
     const saved = typeof window !== "undefined" ? localStorage.getItem(STORAGE_KEY) : null;
     const shouldPlay = saved === null ? true : saved === "true";
 
+    setIsPlaying(shouldPlay);
+
     if (audioRef.current) {
       audioRef.current.volume = 0.8;
       audioRef.current.loop = true;
@@ -19,27 +21,33 @@ const BackgroundMusic = () => {
       audioRef.current.muted = false;
     }
 
-    // reflect desired default in UI immediately
-    setIsPlaying(shouldPlay);
+    // Attempt to play immediately
+    const playAudio = async () => {
+      if (shouldPlay && audioRef.current) {
+        try {
+          await audioRef.current.play();
+          setIsPlaying(true);
+        } catch (error) {
+          // Autoplay blocked - will retry on user interaction
+          setIsPlaying(true); // Keep UI showing "playing" so user sees correct icon
+        }
+      }
+    };
 
-    if (shouldPlay && audioRef.current) {
-      audioRef.current
-        .play()
-        .then(() => setIsPlaying(true))
-        .catch(() => setIsPlaying(false));
-    }
+    playAudio();
   }, []);
 
-  // If autoplay was blocked, try again on first user interaction
+  // Retry on first user interaction if autoplay was blocked
   useEffect(() => {
-    const handleFirstInteraction = () => {
+    const handleFirstInteraction = async () => {
       const saved = localStorage.getItem(STORAGE_KEY);
       const shouldPlay = saved === null ? true : saved === "true";
-      if (shouldPlay && audioRef.current && !isPlaying) {
-        audioRef.current
-          .play()
-          .then(() => setIsPlaying(true))
-          .catch(() => {});
+      if (shouldPlay && audioRef.current && audioRef.current.paused) {
+        try {
+          await audioRef.current.play();
+        } catch (error) {
+          console.log("Play failed:", error);
+        }
       }
     };
 
@@ -50,7 +58,7 @@ const BackgroundMusic = () => {
       document.removeEventListener("click", handleFirstInteraction);
       document.removeEventListener("touchstart", handleFirstInteraction);
     };
-  }, [isPlaying]);
+  }, []);
 
   const togglePlay = () => {
     if (!audioRef.current) return;
